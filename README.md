@@ -107,7 +107,7 @@ We suggest using [quicklisp](http://www.quicklisp.org). Install that,
 and then grab the source (via tarball or git) and put it in
 `~/quicklisp/local-projects/`. Symlinks work okay too.
 
-# Documentation
+## Documentation
 
 See the czmq(7) manpage. Also see czmq.zeromq.com.
 

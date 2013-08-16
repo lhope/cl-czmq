@@ -103,6 +103,7 @@
    #:zsocket-disconnect
    #:zsocket-poll
    #:zsocket-type-str
+   #:zsocket-proxy
    #:zsocket-test)
 
   (:export ;; zframe

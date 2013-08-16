@@ -59,6 +59,11 @@
 (defun zsocket-type-str (socket)
   (zsocket_type_str socket))
 
+;; need zmq_proxy somewhere. Here seems best.
+;; always returns nil.
+(defun zsocket-proxy (frontend backend &optional capture)
+  (as-rc (cffi:foreign-funcall "zmq_proxy" :pointer frontend :pointer backend :pointer (or capture (cffi:null-pointer)) :int)))
+
 #+ignore ;; not in 1.4.1
 (defun zsocket-sendmem (socket data &rest zframe-options)
   "If data is a string, uses with-foreign-string. If

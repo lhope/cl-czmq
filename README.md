@@ -1,4 +1,4 @@
-# cl-czmq - A re-binding of the C binding for the zmq transport layer (czmq). #
+# cl-czmq - A re-binding of the C binding for the zmq transport layer (czmq) #
 
 ## Overview ##
 
@@ -72,7 +72,7 @@ changes to facilitate lisp programming style.
   classes. e.g. `with-zctx`, `with-zsocket`, etc... these take care of
   binding, creating and releasing the underlying blocks of memory.
 
-# polling and zloop
+## polling and zloop ##
 
 The one place CZMQ is lacking is that it does not provide a polling
 class of its own. It uses ZMQ's zmq_pollitem_t. To make up for this,
@@ -90,7 +90,7 @@ create these functions.
 
 Additionally, if you want to pass a lisp object to `zloop-poller` or `zloop-timer`, you need to bind it using `with-zloop-args` or `with-zloop`. This creates a specially crafted c-pointer which `def-zloop-fn` interprets correctly.
 
-# Dependencies
+## Dependencies ##
 
 cl-czmq requires libzmq, libczmq, and cffi.
 
@@ -99,7 +99,7 @@ cl-czmq requires libzmq, libczmq, and cffi.
 - Lisp dependencies are available through
   [quicklisp](http://www.quicklisp.org).
 
-# Installation
+## Installation ##
 
 Build zmq and czmq in your platform specific way.
 
@@ -107,7 +107,7 @@ We suggest using [quicklisp](http://www.quicklisp.org). Install that,
 and then grab the source (via tarball or git) and put it in
 `~/quicklisp/local-projects/`. Symlinks work okay too.
 
-# Documentation
+## Documentation ##
 
 See the czmq(7) manpage. Also see czmq.zeromq.com.
 

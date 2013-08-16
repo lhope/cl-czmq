@@ -40,7 +40,7 @@
    #:zctx-set-hwm
    #:zctx-hwm
    #:zctx-underlying
-   #:zctx-interrupted-p
+   #:zctx-interrupted
    #:zctx-test)
 
   (:export ;; zsockopt

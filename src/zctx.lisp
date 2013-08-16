@@ -51,8 +51,8 @@
 (defun zctx-underlying (zctx)
   (as-pointer (zctx_underlying zctx)))
 
-(defun zctx-interrupted-p ()
-  zctx_interrupted)
+(defun zctx-interrupted ()
+  (not (zerop zctx_interrupted)))
 
 ;;CZMQ_EXPORT int
 ;;    zctx_test (bool verbose);

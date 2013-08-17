@@ -40,8 +40,8 @@ of :zmq-pollin, :zmq-pollout or :zmq-pollerr."
 			   for bitfield = (bitfield-options 'event-types events)
 			   collect
 			     (if (integerp socket/fd)
-				 `(socket ,(cffi:null-pointer) fd ,socket/fd events ,bitfield)
-				 `(socket ,socket/fd fd 0 events ,bitfield))))))
+				 `(socket ,(cffi:null-pointer) fd ,socket/fd events ,bitfield revents 0)
+				 `(socket ,socket/fd fd 0 events ,bitfield revents 0))))))
 
 (defun zpollset-destroy (zpollset)
   "Destroy the zpollset."

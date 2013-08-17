@@ -1,0 +1,2 @@
+- Continue zguide examples up to zloop usage.
+- Rewrite zloop.lisp to allow proper lisp functions.

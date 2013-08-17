@@ -21,6 +21,21 @@ Why CZMQ and not ZMQ?
 - CZMQ contains cool constructs such as zbeacon, zloop, zmsg, etc.
 - CZMQ is in C not C++ :-)
 
+## Installation ##
+
+Build zmq and czmq in your platform specific way.
+
+We suggest using [quicklisp](http://www.quicklisp.org). Install that,
+and then grab the cl-czmq source (via tarball or git) and put it in
+`~/quicklisp/local-projects/`. Symlinks work okay too.
+
+## Documentation and Examples ##
+
+See the czmq(7) manpage. Also see czmq.zeromq.com.
+
+A work-in-process port of the examples in the [ZMQ guide](http://zguide.zeromq.org/page:all) is at https://github.com/lhope/zguide/tree/master/examples/cl-czmq . Currently all examples through Chapter 2 are done.
+
+
 ## Scope and Goals ##
 
 The scope of cl-czmq is to provide CZMQ's functionality to Lisp. CZMQ
@@ -33,7 +48,7 @@ pointless, since we have to copy data into C anyway. zthread, zclock,
 zlist and zhash aren't ported, as their functionality is provided
 adequately by Lisp.
 
-A minimum of extra functionality is introduced See **Using cl-czmq**
+A minimum of extra functionality is introduced. See **Using cl-czmq**
 below.
 
 The goal is to track a well-used API which provides solid
@@ -77,7 +92,8 @@ changes to facilitate lisp programming style.
 The one place CZMQ is lacking is that it does not provide a polling
 class of its own. It uses ZMQ's zmq_pollitem_t. To make up for this,
 we have implemented a zpollset class using the same style as CZMQ. See
-`src/zpollset.lisp` for documentation.
+`src/zpollset.lisp` for documentation. We also provide `zpollset-poll`
+which is a direct api into `zmq_poll`.
 
 zloop is a an [event
 reactor](http://en.wikipedia.org/wiki/Reactor_pattern) which uses
@@ -88,7 +104,14 @@ is a common idiom in lisp, however `zloop-poller` and `zloop-timer`
 require functions with a specific signature. Use `def-zloop-fn` to
 create these functions.
 
-Additionally, if you want to pass a lisp object to `zloop-poller` or `zloop-timer`, you need to bind it using `with-zloop-args` or `with-zloop`. This creates a specially crafted c-pointer which `def-zloop-fn` interprets correctly.
+Additionally, if you want to pass a lisp object to `zloop-poller` or
+`zloop-timer`, you need to bind it using `with-zloop-args` or
+`with-zloop`. This creates a specially crafted c-pointer which
+`def-zloop-fn` interprets correctly.
+
+The above way of calling zloop is complicated and probably
+unworkable. The solution for this is probably to implement zloop in
+lisp using the other zcmq primitives. This is a major TODO item.
 
 ## Dependencies ##
 
@@ -98,18 +121,6 @@ cl-czmq requires libzmq, libczmq, and cffi.
 
 - Lisp dependencies are available through
   [quicklisp](http://www.quicklisp.org).
-
-## Installation ##
-
-Build zmq and czmq in your platform specific way.
-
-We suggest using [quicklisp](http://www.quicklisp.org). Install that,
-and then grab the source (via tarball or git) and put it in
-`~/quicklisp/local-projects/`. Symlinks work okay too.
-
-## Documentation ##
-
-See the czmq(7) manpage. Also see czmq.zeromq.com.
 
 ## Ownership and License ##
 

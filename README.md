@@ -99,19 +99,11 @@ zloop is a an [event
 reactor](http://en.wikipedia.org/wiki/Reactor_pattern) which uses
 handler functions to deal with events.
 
-Passing a function to another
-is a common idiom in lisp, however `zloop-poller` and `zloop-timer`
-require functions with a specific signature. Use `def-zloop-fn` to
-create these functions.
-
-Additionally, if you want to pass a lisp object to `zloop-poller` or
-`zloop-timer`, you need to bind it using `with-zloop-args` or
-`with-zloop`. This creates a specially crafted c-pointer which
-`def-zloop-fn` interprets correctly.
-
-The above way of calling zloop is complicated and probably
-unworkable. The solution for this is probably to implement zloop in
-lisp using the other zcmq primitives. This is a major TODO item.
+Unlike the rest of cl-czmq, zloop has been ported to CL. This is so it
+can support full lisp closures and lisp objects.  Handler functions
+take the zloop and triggering pollitem (or nil for timers) as the
+first two values, with the rest of the arguments as passed through
+`zloop-poller` and/or `zloop-timer`.
 
 ## Dependencies ##
 

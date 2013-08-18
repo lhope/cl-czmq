@@ -1,1 +1,1 @@
-- Rewrite zloop.lisp to allow proper lisp functions.
+DONE - Rewrite zloop.lisp to allow proper lisp functions.

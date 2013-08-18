@@ -64,7 +64,8 @@
 (bitfield event-types
           ((:zmq-pollin "ZMQ_POLLIN"))
           ((:zmq-pollout "ZMQ_POLLOUT"))
-          ((:zmq-pollerr "ZMQ_POLLERR")))
+          ((:zmq-pollerr "ZMQ_POLLERR"))
+	  ((:zmq-ignerr "ZMQ_IGNERR")))
 
 (constantenum socket-type
               ((:zmq-pair "ZMQ_PAIR"))

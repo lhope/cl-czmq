@@ -58,6 +58,13 @@
   )
 
 (defun %zloop-log (format &rest args)
+  (flet ((iso-8601-time ()
+	   (multiple-value-bind (second minute hour date month year)
+	       (decode-universal-time (get-universal-time) 0)
+	     (let ((msec (mod (get-internal-real-time) 1000)))
+	     (format nil "~D-~2,'0D-~2,'0D ~D:~2,'0D:~2,'0D.~3,'0D"
+		     year month date hour minute second msec)))))
+    (format *error-output* "[~A] - " (iso-8601-time)))
   (apply #'format *error-output* format args)
   (fresh-line *error-output*))
 
@@ -215,7 +222,7 @@ activity on pollers. Returns t on success, nil on failure."
 	(setf (%zloop-pollers self)
 	      (delete-if #'poller-match-p (%zloop-pollers self)))))
     (when (%zloop-verbose self)
-      (%zloop-log "I: zloop: cancel %s poller (%p, %d)"
+      (%zloop-log "I: zloop: cancel ~s poller (~a, ~d)"
 		  (if (cffi:null-pointer-p socket)
 		      "FD" (zsocket-type-str socket))
 		  socket fd))))
@@ -268,6 +275,10 @@ activity on pollers. Returns t on success, nil on failure."
 ;;  cancel sockets. Returns 0 if interrupted, nil if canceled by a
 ;;  handler, positive on internal error
 
+(defun %zmq-err ()
+  (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
+    (cffi:foreign-funcall "zmq_strerror" :int errno :string)))
+
 (defun zloop-start (self)
   (assert self)
 
@@ -293,7 +304,7 @@ activity on pollers. Returns t on success, nil on failure."
 		 (zctx-interrupted))
 	 (when (%zloop-verbose self)
 	   (%zloop-log "I: zloop: interrupted - ~s"
-		       "TODO")) ;;zmq_strerror (zmq_errno ()));
+		       (%zmq-err)))
 	 (setf rc 0)
 	 (loop-finish)) ;; Context has been shut down.
 
@@ -336,7 +347,7 @@ activity on pollers. Returns t on success, nil on failure."
 				   (if (cffi:null-pointer-p socket)
 				       "FD" (zsocket-type-str socket))
 				   socket fd
-				   "TODO")) ;;zmq_strerror (zmq_errno ()));
+				   (%zmq-err)))
 		     ;;  Give handler one chance to handle error, then kill
 		     ;;  poller because it'll disrupt the reactor otherwise.
 		     (unless (zerop (%poller-errors poller))

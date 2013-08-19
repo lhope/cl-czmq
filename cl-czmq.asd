@@ -28,7 +28,7 @@
   :license "LLGPL"
   :maintainer "Lucas Hope <lucas.r.hope@gmail.com"
   :description "A re-binding of the C binding for the zmq transport layer (czmq)."
-  :depends-on (:cffi) ;;:bordeaux-threads)
+  :depends-on (:cffi :bordeaux-threads)
   :components ((:module "src"
 		:serial t
                 :components ((:file "package")
@@ -45,4 +45,5 @@
 			     (:file "zpollset")
 			     (:file "zloop")
 			     (:file "zbeacon")
+			     (:file "zthread")
 			     ))))

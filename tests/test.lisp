@@ -29,3 +29,4 @@
 (zmsg-test t)
 (zloop-test t)
 (zbeacon-test t)
+(zthread-test t)

@@ -171,6 +171,11 @@
    #:zbeacon-pipe
    #:zbeacon-test)
 
+  (:export ;; zthread
+   #:zthread-new
+   #:zthread-fork
+   #:zthread-test)
+
   (:export ;; zpollset (lisp binding only)
    #:zpollset-new
    #:zpollset-destroy

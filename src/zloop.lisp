@@ -141,6 +141,9 @@ activity on pollers. Returns t on success, nil on failure."
 	(%zloop-log "I: zloop: polling for ~D msec" timeout))
       timeout)))
 
+(defun %ptr-addr (ptr)
+  (format nil "~8,'0x" (cffi:pointer-address ptr)))
+
 ;;  --------------------------------------------------------------------------
 ;;  Constructor
 
@@ -193,7 +196,7 @@ activity on pollers. Returns t on success, nil on failure."
 	  (%zloop-log "I: zloop: register ~A poller (~A, ~d)"
 		      (if (cffi:null-pointer-p socket)
 			  "FD" (zsocket-type-str socket))
-		      socket fd))
+		      (%ptr-addr socket) fd))
 	t))))
 
 
@@ -225,7 +228,7 @@ activity on pollers. Returns t on success, nil on failure."
       (%zloop-log "I: zloop: cancel ~s poller (~a, ~d)"
 		  (if (cffi:null-pointer-p socket)
 		      "FD" (zsocket-type-str socket))
-		  socket fd))))
+		  (%ptr-addr socket) fd))))
 
 
 ;;  --------------------------------------------------------------------------
@@ -277,7 +280,9 @@ activity on pollers. Returns t on success, nil on failure."
 
 (defun %zmq-err ()
   (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
-    (cffi:foreign-funcall "zmq_strerror" :int errno :string)))
+    (format nil "~a (~D=~a)"
+	    (cffi:foreign-funcall "zmq_strerror" :int errno :string)
+	    errno (cffi:foreign-enum-keyword 'error-code errno))))
 
 (defun zloop-start (self)
   (assert self)
@@ -346,7 +351,7 @@ activity on pollers. Returns t on success, nil on failure."
 		       (%zloop-log "I: zloop: can't poll %a socket (~A, ~d): ~A"
 				   (if (cffi:null-pointer-p socket)
 				       "FD" (zsocket-type-str socket))
-				   socket fd
+				   (%ptr-addr socket) fd
 				   (%zmq-err)))
 		     ;;  Give handler one chance to handle error, then kill
 		     ;;  poller because it'll disrupt the reactor otherwise.
@@ -363,7 +368,7 @@ activity on pollers. Returns t on success, nil on failure."
 		  (%zloop-log "I: zloop: call ~a socket handler (~A, ~d)"
 			      (if (cffi:null-pointer-p socket)
 				  "FD" (zsocket-type-str socket))
-			      socket fd))
+			      (%ptr-addr socket) fd))
 
                 (setf rc (apply (%poller-handler poller)
 				self item (%poller-args poller)))

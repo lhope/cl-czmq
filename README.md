@@ -44,9 +44,12 @@ message frames, and multi-part messages. It simplifies greatly the ZMQ
 socket options.
 
 Some functionality of CZMQ is not ported. Zero copy methods are
-pointless, since we have to copy data into C anyway. zthread, zclock,
+pointless, since we have to copy data into C anyway. zclock,
 zlist and zhash aren't ported, as their functionality is provided
 adequately by Lisp.
+
+Most cl-czmq functions are thin wrappers around CZMQ. zloop and
+zthread are, however, lisp re-implementations.
 
 A minimum of extra functionality is introduced. See **Using cl-czmq**
 below.
@@ -107,7 +110,7 @@ first two values, with the rest of the arguments as passed through
 
 ## Dependencies ##
 
-cl-czmq requires libzmq, libczmq, and cffi.
+cl-czmq requires libzmq, libczmq, cffi and bordeaux-threads.
 
 - ZMQ dependencies are available through zeromq.org.
 

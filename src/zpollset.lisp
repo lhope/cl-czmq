@@ -19,6 +19,9 @@
 
 (in-package :cl-czmq)
 
+(defconstant +zmq-poll-msec+
+  ZMQ_POLL_MSEC)
+
 ;; MY OWN ADDITIONS.
 
 ;; really a zmq_pollitem_t

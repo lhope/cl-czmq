@@ -67,6 +67,17 @@ up the zpollset afterwards."
   (let ((zpoller (cffi:mem-aref zpollset '(:struct zpoller) index)))
     (cffi:foreign-bitfield-symbols 'event-types (getf zpoller 'revents))))
 
+;; Too many typos of :zmq-pollin!!
+(defun zpollset-pollin (zpollset &optional (index 0))
+  (member :zmq-pollin (zpollset-events zpollset index)))
+
+(defun zpollset-pollout (zpollset &optional (index 0))
+  (member :zmq-pollout (zpollset-events zpollset index)))
+
+(defun zpollset-pollerr (zpollset &optional (index 0))
+  (member :zmq-pollerr (zpollset-events zpollset index)))
+
+
 (defun zpollset-poll (zpollset count timeout)
   "Call zmq_poll on the zpollset. count is the number of zpollers in
 the zpollset we wish to poll.  If timeout is positive, wait that long

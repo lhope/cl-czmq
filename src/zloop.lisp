@@ -278,12 +278,6 @@ activity on pollers. Returns t on success, nil on failure."
 ;;  cancel sockets. Returns 0 if interrupted, nil if canceled by a
 ;;  handler, positive on internal error
 
-(defun %zmq-err ()
-  (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
-    (format nil "~a (~D=~a)"
-	    (cffi:foreign-funcall "zmq_strerror" :int errno :string)
-	    errno (cffi:foreign-enum-keyword 'error-code errno))))
-
 (defun zloop-start (self)
   (assert self)
 

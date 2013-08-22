@@ -23,6 +23,12 @@
   (with-freed-string
     (cffi:foreign-funcall "zstr_recv" :pointer socket :pointer)))
 
+;; retrying zstr-recv
+(defun zstr-recv-retry (socket)
+  (loop with str = (zstr-recv socket)
+     when (or str (eql (zsys-errno) :eintr))
+     return str))
+
 (defun zstr-recv-nowait (socket)
   (with-freed-string
     (cffi:foreign-funcall "zstr_recv_nowait" :pointer socket :pointer)))

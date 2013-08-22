@@ -37,6 +37,12 @@
 (defun zframe-recv (socket)
   (as-pointer (zframe_recv socket)))
 
+;; retrying zframe-recv
+(defun zframe-recv-retry (socket)
+  (loop with frame = (zframe-recv socket)
+     when (or frame (eql (zsys-errno) :eintr))
+     return frame))
+
 (defun zframe-recv-nowait (socket)
   (as-pointer (zframe_recv_nowait socket)))
 

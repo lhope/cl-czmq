@@ -28,12 +28,13 @@
    #:+czmq-version-major+
    #:+czmq-version-minor+
    #:+czmq-version-patch+
-   #:+czmq-version+)
+   #:+czmq-version+
+   #:zsys-errno) ;; *
 
   (:export ;; zctx
    #:zctx-new
    #:zctx-destroy
-   #:with-zctx
+   #:with-zctx ;;*
    #:zctx-shadow
    #:zctx-set-iothreads
    #:zctx-set-linger
@@ -97,7 +98,7 @@
    #:+zsocket-dynto+
    #:zsocket-new
    #:zsocket-destroy
-   #:with-zsockets
+   #:with-zsockets ;; *
    #:zsocket-bind
    #:zsocket-connect
    #:zsocket-disconnect
@@ -110,6 +111,7 @@
    #:zframe-new
    #:zframe-destroy
    #:zframe-recv
+   #:zframe-recv-retry ;; *
    #:zframe-recv-nowait
    #:zframe-send
    #:zframe-size
@@ -126,6 +128,7 @@
 
   (:export ;; zstr
    #:zstr-recv
+   #:zstr-recv-retry ;; *
    #:zstr-recv-nowait
    #:zstr-send
    #:zstr-sendm
@@ -135,6 +138,7 @@
    #:zmsg-new
    #:zmsg-destroy
    #:zmsg-recv
+   #:zmsg-recv-retry ;; *
    #:zmsg-send
    #:zmsg-size
    #:zmsg-content-size
@@ -178,22 +182,16 @@
 
   (:export ;; zpollset (lisp binding only)
    #:+zmq-poll-msec+
-   #:zpollset-new
-   #:zpollset-destroy
-   #:with-zpollset
-   #:zpollset-events
-   #:zpollset-pollin
-   #:zpollset-pollout
-   #:zpollset-pollerr
-   #:zpollset-poll)
+   #:zpollset-new     ;; *
+   #:zpollset-destroy ;; *
+   #:with-zpollset    ;; *
+   #:zpollset-events  ;; *
+   #:zpollset-pollin  ;; *
+   #:zpollset-pollout ;; *
+   #:zpollset-pollerr ;; *
+   #:zpollset-poll)   ;; *
 
   (:export ;; zloop
-   ;; lisp binding only
-   #:zloop-arg-new
-   #:zloop-arg-destroy
-   #:zloop-arg
-   #:def-zloop-fn
-   #:with-zloop-args
    ;; core api
    #:zloop-new
    #:zloop-destroy

@@ -31,7 +31,7 @@
   (as-pointer (zmsg_recv socket)))
 
 ;; retrying zmsg-recv
-(defun zframe-recv-retry (socket)
+(defun zmsg-recv-retry (socket)
   (loop with msg = (zmsg-recv socket)
      when (or msg (eql (zsys-errno) :eintr))
      return msg))

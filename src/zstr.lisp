@@ -25,8 +25,8 @@
 
 ;; retrying zstr-recv
 (defun zstr-recv-retry (socket)
-  (loop with str = (zstr-recv socket)
-     when (or str (eql (zsys-errno) :eintr))
+  (loop for str = (zstr-recv socket)
+     when (or str (not (eql (zsys-errno) :eintr)))
      return str))
 
 (defun zstr-recv-nowait (socket)

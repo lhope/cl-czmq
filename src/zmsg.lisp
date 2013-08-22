@@ -32,8 +32,8 @@
 
 ;; retrying zmsg-recv
 (defun zmsg-recv-retry (socket)
-  (loop with msg = (zmsg-recv socket)
-     when (or msg (eql (zsys-errno) :eintr))
+  (loop for msg = (zmsg-recv socket)
+     when (or msg (not (eql (zsys-errno) :eintr)))
      return msg))
 
 (defun zmsg-send (zmsg socket)

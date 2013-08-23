@@ -27,13 +27,13 @@
     (zmsg_destroy &zmsg)
     (as-pointer (unbox &zmsg :pointer))))
 
-(defun zmsg-recv (socket)
+(defun %zmsg-recv (socket)
   (as-pointer (zmsg_recv socket)))
 
 ;; retrying zmsg-recv
-(defun zmsg-recv-retry (socket)
-  (loop for msg = (zmsg-recv socket)
-     when (or msg (not (eql (zsys-errno) :eintr)))
+(defun zmsg-recv (socket &optional (retry *zsys-retry*))
+  (loop for msg = (%zmsg-recv socket)
+     when (or msg (not retry) (not (eql (zsys-errno) :eintr)))
      return msg))
 
 (defun zmsg-send (zmsg socket)

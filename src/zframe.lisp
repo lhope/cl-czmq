@@ -34,13 +34,13 @@
     (zframe_destroy &zframe)
     (as-pointer (unbox &zframe :pointer))))
 
-(defun zframe-recv (socket)
+(defun %zframe-recv (socket)
   (as-pointer (zframe_recv socket)))
 
 ;; retrying zframe-recv
-(defun zframe-recv-retry (socket)
-  (loop for frame = (zframe-recv socket)
-     when (or frame (not (eql (zsys-errno) :eintr)))
+(defun zframe-recv (socket &optional (retry *zsys-retry*))
+  (loop for frame = (%zframe-recv socket)
+     when (or frame (not retry) (not (eql (zsys-errno) :eintr)))
      return frame))
 
 (defun zframe-recv-nowait (socket)

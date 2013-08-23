@@ -19,14 +19,14 @@
 
 (in-package :cl-czmq)
 
-(defun zstr-recv (socket)
+(defun %zstr-recv (socket)
   (with-freed-string
     (cffi:foreign-funcall "zstr_recv" :pointer socket :pointer)))
 
 ;; retrying zstr-recv
-(defun zstr-recv-retry (socket)
-  (loop for str = (zstr-recv socket)
-     when (or str (not (eql (zsys-errno) :eintr)))
+(defun zstr-recv (socket &optional (retry *zsys-retry*))
+  (loop for str = (%zstr-recv socket)
+     when (or str (not retry) (not (eql (zsys-errno) :eintr)))
      return str))
 
 (defun zstr-recv-nowait (socket)

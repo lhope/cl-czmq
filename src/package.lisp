@@ -114,7 +114,6 @@
    #:zframe-new
    #:zframe-destroy
    #:zframe-recv
-   #:zframe-recv-retry ;; *
    #:zframe-recv-nowait
    #:zframe-send
    #:zframe-size
@@ -131,7 +130,6 @@
 
   (:export ;; zstr
    #:zstr-recv
-   #:zstr-recv-retry ;; *
    #:zstr-recv-nowait
    #:zstr-send
    #:zstr-sendm
@@ -141,7 +139,6 @@
    #:zmsg-new
    #:zmsg-destroy
    #:zmsg-recv
-   #:zmsg-recv-retry ;; *
    #:zmsg-send
    #:zmsg-size
    #:zmsg-content-size

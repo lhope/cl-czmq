@@ -71,7 +71,9 @@
 
 (defun zthread-new (thread-fn &rest args)
   (bordeaux-threads:make-thread
-   (lambda () (apply thread-fn args))))
+   (lambda ()
+     (with-zsys-retry (t)
+       (apply thread-fn args)))))
 
 
 ;;  --------------------------------------------------------------------------
@@ -103,8 +105,9 @@
       (values pipe
 	      (bordeaux-threads:make-thread
 	       (lambda ()
-		 (apply thread-fn shim->ctx shim->pipe args)
-		 (zctx-destroy shim->ctx))
+		 (with-zsys-retry (t)
+		   (apply thread-fn shim->ctx shim->pipe args)
+		   (zctx-destroy shim->ctx)))
 	       :name name)))))
 
 

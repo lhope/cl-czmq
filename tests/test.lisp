@@ -30,3 +30,4 @@
 (zloop-test t)
 (zbeacon-test t)
 (zthread-test t)
+(zlist-test t)

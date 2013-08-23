@@ -47,4 +47,5 @@
 			     (:file "zloop")
 			     (:file "zbeacon")
 			     (:file "zthread")
+			     (:file "zlist")
 			     ))))

@@ -202,4 +202,21 @@
    #:zloop-timer-end
    #:zloop-set-verbose
    #:zloop-start
-   #:zloop-test))
+   #:zloop-test)
+
+  (:export ;; zlist
+   #:zlist-new
+   #:zlist-destroy
+   #:zlist-first
+   #:zlist-last
+   #:zlist-head
+   #:zlist-tail
+   #:zlist-next
+   #:zlist-append
+   #:zlist-push
+   #:zlist-pop
+   #:zlist-remove
+   #:zlist-dup
+   #:zlist-size
+   #:zlist-sort
+   #:zlist-test))

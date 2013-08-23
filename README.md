@@ -45,10 +45,10 @@ socket options.
 
 Some functionality of CZMQ is not ported. Zero copy methods are
 pointless, since we have to copy data into C anyway. zclock,
-zlist and zhash aren't ported, as their functionality is provided
+and zhash aren't ported, as their functionality is provided
 adequately by Lisp.
 
-Most cl-czmq functions are thin wrappers around CZMQ. zloop and
+Most cl-czmq functions are thin wrappers around CZMQ. zloop, zlist and
 zthread are, however, lisp re-implementations.
 
 A minimum of extra functionality is introduced. See **Using cl-czmq**

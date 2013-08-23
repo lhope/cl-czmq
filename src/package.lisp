@@ -30,7 +30,10 @@
    #:+czmq-version-patch+
    #:+czmq-version+
    #:zsys-errno) ;; *
-
+  (:export ;; zsys
+   #:zsys-set-retry ;; *
+   #:zsys-retry ;; *
+   #:with-zsys-retry) ;; *
   (:export ;; zctx
    #:zctx-new
    #:zctx-destroy

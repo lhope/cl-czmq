@@ -36,6 +36,7 @@
 			     (:file "ffi")
 			     (:file "ffi-utils")
 			     (:file "czmq")
+			     (:file "zsys")
 			     (:file "zctx")
 			     (:file "zsocket")
 			     (:file "zsockopt")

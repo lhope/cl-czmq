@@ -88,5 +88,6 @@ of events triggered, which may be zero."
   (as-rc (cffi:foreign-funcall "zmq_poll"
 			       :pointer zpollset
 			       :int count
-			       :long (* timeout ZMQ_POLL_MSEC) :int)))
+			       :long (if (plusp timeout) (* timeout +zmq-poll-msec+) timeout)
+			       :int)))
 

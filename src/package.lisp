@@ -181,7 +181,6 @@
    #:zthread-test)
 
   (:export ;; zpollset (lisp binding only)
-   #:+zmq-poll-msec+
    #:zpollset-new     ;; *
    #:zpollset-destroy ;; *
    #:with-zpollset    ;; *

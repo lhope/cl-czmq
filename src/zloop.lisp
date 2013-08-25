@@ -299,7 +299,8 @@ activity on pollers. Returns t on success, nil on failure."
 
        (when (or (null (zpollset-poll (%zloop-pollset self)
 				      (%zloop-poll-size self)
-				      (* (s-tickless-timer self) zmq_poll_msec)))
+				      ;; zpollset-poll takes care of +zmq-poll-msec+
+				      (s-tickless-timer self)))
 		 (zctx-interrupted))
 	 (when (%zloop-verbose self)
 	   (%zloop-log "I: zloop: interrupted - ~s"

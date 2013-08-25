@@ -22,6 +22,7 @@
 (use-package :cl-czmq)
 
 (zctx-test t)
+(zclock-test t)
 (zsocket-test t)
 (zsockopt-test t)
 (zframe-test t)

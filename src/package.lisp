@@ -218,4 +218,10 @@
    #:zlist-dup
    #:zlist-size
    #:zlist-sort
-   #:zlist-test))
+   #:zlist-test)
+
+  (:export ;; zclock
+   #:zclock-sleep
+   #:zclock-time
+   #:zclock-log
+   #:zclock-test))

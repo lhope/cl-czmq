@@ -44,6 +44,7 @@
 			     (:file "zstr")
 			     (:file "zmsg")
 			     (:file "zpollset")
+			     (:file "zclock")
 			     (:file "zloop")
 			     (:file "zbeacon")
 			     (:file "zthread")

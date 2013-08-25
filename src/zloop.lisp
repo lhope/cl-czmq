@@ -57,17 +57,6 @@
   when    ;; int64_t when - Clock time when alarm goes off
   )
 
-(defun %zloop-log (format &rest args)
-  (flet ((iso-8601-time ()
-	   (multiple-value-bind (second minute hour date month year)
-	       (decode-universal-time (get-universal-time) 0)
-	     (let ((msec (mod (get-internal-real-time) 1000)))
-	     (format nil "~D-~2,'0D-~2,'0D ~D:~2,'0D:~2,'0D.~3,'0D"
-		     year month date hour minute second msec)))))
-    (format *error-output* "[~A] - " (iso-8601-time)))
-  (apply #'format *error-output* format args)
-  (fresh-line *error-output*))
-
 (defun %item-copy (from-ptr &optional to-ptr)
   (assert (cffi:pointerp from-ptr))
   (unless to-ptr
@@ -128,17 +117,17 @@ activity on pollers. Returns t on success, nil on failure."
 
 (defun s-tickless-timer (zloop)
   ;;  Calculate tickless timer, up to 1 hour
-  (let ((tickless (+ (get-internal-real-time)
+  (let ((tickless (+ (zclock-time)
 		     (* 1000 3600))))
     (dolist (timer (%zloop-timers zloop))
       (when (= -1 (%timer-when timer))
 	(setf (%timer-when timer)
 	      (+ (%timer-delay timer)
-		 (get-internal-real-time))))
+		 (zclock-time))))
       (setf tickless (min tickless (%timer-when timer))))
-    (let ((timeout (max 0 (- tickless (get-internal-real-time)))))
+    (let ((timeout (max 0 (- tickless (zclock-time)))))
       (when (%zloop-verbose zloop)
-	(%zloop-log "I: zloop: polling for ~D msec" timeout))
+	(zclock-log "I: zloop: polling for ~D msec" timeout))
       timeout)))
 
 (defun %ptr-addr (ptr)
@@ -193,7 +182,7 @@ activity on pollers. Returns t on success, nil on failure."
 	(push poller (%zloop-pollers self))
 	(setf (%zloop-dirty self) t)
 	(when (%zloop-verbose self)
-	  (%zloop-log "I: zloop: register ~A poller (~A, ~d)"
+	  (zclock-log "I: zloop: register ~A poller (~A, ~d)"
 		      (if (cffi:null-pointer-p socket)
 			  "FD" (zsocket-type-str socket))
 		      (%ptr-addr socket) fd))
@@ -225,7 +214,7 @@ activity on pollers. Returns t on success, nil on failure."
 	(setf (%zloop-pollers self)
 	      (delete-if #'poller-match-p (%zloop-pollers self)))))
     (when (%zloop-verbose self)
-      (%zloop-log "I: zloop: cancel ~s poller (~a, ~d)"
+      (zclock-log "I: zloop: cancel ~s poller (~a, ~d)"
 		  (if (cffi:null-pointer-p socket)
 		      "FD" (zsocket-type-str socket))
 		  (%ptr-addr socket) fd))))
@@ -245,7 +234,7 @@ activity on pollers. Returns t on success, nil on failure."
     (push timer (%zloop-timers self))
 
     (when (%zloop-verbose self)
-      (%zloop-log "I: zloop: register timer delay=~d times=~d" delay times))
+      (zclock-log "I: zloop: register timer delay=~d times=~d" delay times))
     t))
 
 
@@ -263,7 +252,7 @@ activity on pollers. Returns t on success, nil on failure."
   (push args (%zloop-zombies self))
 
   (when (%zloop-verbose self)
-    (%zloop-log "I: zloop: cancel timer")))
+    (zclock-log "I: zloop: cancel timer")))
 
 ;;  --------------------------------------------------------------------------
 ;;  Set verbose tracing of reactor on/off
@@ -284,7 +273,7 @@ activity on pollers. Returns t on success, nil on failure."
   ;;  Recalculate all timers now
   (dolist (timer (%zloop-timers self))
     (setf (%timer-when timer)
-	  (+ (get-internal-real-time) (%timer-delay timer))))
+	  (+ (zclock-time) (%timer-delay timer))))
 
 
   ;;  Main reactor loop
@@ -303,7 +292,7 @@ activity on pollers. Returns t on success, nil on failure."
 				      (s-tickless-timer self)))
 		 (zctx-interrupted))
 	 (when (%zloop-verbose self)
-	   (%zloop-log "I: zloop: interrupted - ~s"
+	   (zclock-log "I: zloop: interrupted - ~s"
 		       (%zmq-err)))
 	 (setf rc 0)
 	 (loop-finish)) ;; Context has been shut down.
@@ -313,9 +302,9 @@ activity on pollers. Returns t on success, nil on failure."
 	  for timer in (%zloop-timers self)
 	  for when = (%timer-when timer) do
 	    (when (and (/= -1 when)
-		       (>= (get-internal-real-time) when))
+		       (>= (zclock-time) when))
 	      (when (%zloop-verbose self)
-		(%zloop-log "I: zloop: call timer handler"))
+		(zclock-log "I: zloop: call timer handler"))
 
 	      (unless (setf rc (apply (%timer-handler timer) self nil (%timer-args timer)))
 		(loop-finish)) ;;  Timer handler signaled break
@@ -324,7 +313,7 @@ activity on pollers. Returns t on success, nil on failure."
 		       (zerop (decf (%timer-times timer))))
 		  (push timer to-remove)
 		  (setf (%timer-when timer)
-			(+ (%timer-delay timer) (get-internal-real-time)))))
+			(+ (%timer-delay timer) (zclock-time)))))
 	  finally
 	    (setf (%zloop-timers self)
 		  (nset-difference (%zloop-timers self) to-remove)))
@@ -343,7 +332,7 @@ activity on pollers. Returns t on success, nil on failure."
 	      (cond ((and (member :zmq-pollerr (zpollset-events item))
 			  (not (%poller-ignore-errors poller)))
 		     (when (%zloop-verbose self)
-		       (%zloop-log "I: zloop: can't poll %a socket (~A, ~d): ~A"
+		       (zclock-log "I: zloop: can't poll %a socket (~A, ~d): ~A"
 				   (if (cffi:null-pointer-p socket)
 				       "FD" (zsocket-type-str socket))
 				   (%ptr-addr socket) fd
@@ -360,7 +349,7 @@ activity on pollers. Returns t on success, nil on failure."
 
 	      (unless (zerop revents)
                 (when (%zloop-verbose self)
-		  (%zloop-log "I: zloop: call ~a socket handler (~A, ~d)"
+		  (zclock-log "I: zloop: call ~a socket handler (~A, ~d)"
 			      (if (cffi:null-pointer-p socket)
 				  "FD" (zsocket-type-str socket))
 			      (%ptr-addr socket) fd))
@@ -373,7 +362,7 @@ activity on pollers. Returns t on success, nil on failure."
                 ;; we need to force rebuild in order to avoid reading from freed memory in the handler
                 (when (%zloop-dirty self)
 		  (when (%zloop-verbose self)
-		    (%zloop-log "I: zloop: pollers canceled, forcing rebuild"))
+		    (zclock-log "I: zloop: pollers canceled, forcing rebuild"))
 		  (loop-finish)))))
 
      ;;  Now handle any timer zombies

@@ -46,11 +46,20 @@
 ;;  Print formatted string to stdout, prefixed by date/time and
 ;;  terminated with a newline.
 
-(defun zclock-log (fmt &rest args)
-  (zclock_log "%s" :string (apply #'format nil fmt args)))
-
-;;  --------------------------------------------------------------------------
-;;  Self test of this class
+(let (dst tz)
+  (defun zclock-log (fmt &rest args)
+    (unless tz
+      (destructuring-bind (dst1 tz1)
+	  (nthcdr 7 (multiple-value-list (decode-universal-time (get-universal-time))))
+	(setf dst dst1 tz tz1)))
+    (flet ((iso-8601-time ()
+	     (multiple-value-bind (second minute hour date month year)
+		 (decode-universal-time (get-universal-time) (- tz (if dst 1 0)))
+	       (format nil "~D-~2,'0D-~2,'0D ~D:~2,'0D:~2,'0D"
+		       year month date hour minute second))))
+      (format t "~A " (iso-8601-time)))
+    (apply #'format t fmt args)
+    (fresh-line)))
 
 (defun zclock-test (verbose)
   (declare (ignore verbose))

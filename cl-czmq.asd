@@ -49,4 +49,4 @@
 			     (:file "zbeacon")
 			     (:file "zthread")
 			     (:file "zlist")
-			     ))))
+			     (:file "zhash")))))

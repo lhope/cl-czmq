@@ -46,3 +46,14 @@ rebound within zthread-new and zthread-fork."
   "Binds the default recv retry."
   `(let ((*zsys-retry* ,retry))
      ,@body))
+
+(defun zsys-errno ()
+  (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
+    (values (cffi:foreign-enum-keyword 'error-code errno)
+	    errno)))
+
+(defun zsys-strerror ()
+  (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
+    (format nil "~a (~D=~a)"
+	    (cffi:foreign-funcall "zmq_strerror" :int errno :string)
+	    errno (cffi:foreign-enum-keyword 'error-code errno))))

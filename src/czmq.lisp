@@ -30,14 +30,3 @@
 
 (defconstant +czmq-version+
   CZMQ_VERSION)
-
-(defun zsys-errno ()
-  (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
-    (values (cffi:foreign-enum-keyword 'error-code errno)
-	    errno)))
-
-(defun %zmq-err ()
-  (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
-    (format nil "~a (~D=~a)"
-	    (cffi:foreign-funcall "zmq_strerror" :int errno :string)
-	    errno (cffi:foreign-enum-keyword 'error-code errno))))

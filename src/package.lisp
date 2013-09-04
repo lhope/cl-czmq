@@ -28,12 +28,15 @@
    #:+czmq-version-major+
    #:+czmq-version-minor+
    #:+czmq-version-patch+
-   #:+czmq-version+
-   #:zsys-errno) ;; *
+   #:+czmq-version+)
+
   (:export ;; zsys
    #:zsys-set-retry ;; *
    #:zsys-retry ;; *
-   #:with-zsys-retry) ;; *
+   #:with-zsys-retry ;; *
+   #:zsys-errno ;; *
+   #:zsys-strerror) ;; *
+
   (:export ;; zctx
    #:zctx-new
    #:zctx-destroy

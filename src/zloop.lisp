@@ -293,7 +293,7 @@ activity on pollers. Returns t on success, nil on failure."
 		 (zctx-interrupted))
 	 (when (%zloop-verbose self)
 	   (zclock-log "I: zloop: interrupted - ~s"
-		       (%zmq-err)))
+		       (zsys-strerror)))
 	 (setf rc 0)
 	 (loop-finish)) ;; Context has been shut down.
 
@@ -336,7 +336,7 @@ activity on pollers. Returns t on success, nil on failure."
 				   (if (cffi:null-pointer-p socket)
 				       "FD" (zsocket-type-str socket))
 				   (%ptr-addr socket) fd
-				   (%zmq-err)))
+				   (zsys-strerror)))
 		     ;;  Give handler one chance to handle error, then kill
 		     ;;  poller because it'll disrupt the reactor otherwise.
 		     (unless (zerop (%poller-errors poller))

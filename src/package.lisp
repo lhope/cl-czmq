@@ -227,4 +227,21 @@
    #:zclock-sleep
    #:zclock-time
    #:zclock-log
-   #:zclock-test))
+   #:zclock-test)
+
+  (:export ;; zhash
+   #:zhash-new
+   #:zhash-destroy
+   #:zhash-insert
+   #:zhash-update
+   #:zhash-delete
+   #:zhash-lookup
+   #:zhash-rename
+   #:zhash-freefn
+   #:zhash-size
+   #:zhash-dup
+   #:zhash-keys
+   #:zhash-foreach
+   #:zhash-save
+   #:zhash-load
+   #:zhash-test))

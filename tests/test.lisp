@@ -32,3 +32,4 @@
 (zbeacon-test t)
 (zthread-test t)
 (zlist-test t)
+(zhash-test t)

@@ -33,7 +33,11 @@ and then grab the cl-czmq source (via tarball or git) and put it in
 
 See the czmq(7) manpage. Also see czmq.zeromq.com.
 
-A work-in-process port of the examples in the [ZMQ guide](http://zguide.zeromq.org/page:all) is at https://github.com/lhope/zguide/tree/master/examples/cl-czmq . Currently all examples through Chapter 2 are done.
+A work-in-process port of the examples in the [ZMQ
+guide](http://zguide.zeromq.org/page:all) is at
+https://github.com/lhope/zguide/tree/master/examples/cl-czmq
+. Currently all examples through Chapter 3 are done. The Pirate
+examples of Chapter 4 are all done, too.
 
 
 ## Scope and Goals ##
@@ -43,13 +47,11 @@ provides easy functions to send and receive memory blocks, strings,
 message frames, and multi-part messages. It simplifies greatly the ZMQ
 socket options.
 
-Some functionality of CZMQ is not ported. Zero copy methods are
-pointless, since we have to copy data into C anyway. zclock,
-and zhash aren't ported, as their functionality is provided
-adequately by Lisp.
+Some functionality of CZMQ is not ported. Fore example, Zero copy methods are
+pointless, since we have to copy data into C anyway.
 
-Most cl-czmq functions are thin wrappers around CZMQ. zloop, zlist and
-zthread are, however, lisp re-implementations.
+Most cl-czmq functions are thin wrappers around CZMQ. zloop, zhash,
+zlist and zthread are, however, lisp re-implementations.
 
 A minimum of extra functionality is introduced. See **Using cl-czmq**
 below.

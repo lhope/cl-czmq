@@ -49,8 +49,13 @@ rebound within zthread-new and zthread-fork."
 
 (defun zsys-errno ()
   (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))
-    (values (cffi:foreign-enum-keyword 'error-code errno)
-	    errno)))
+    (values
+     #+allegro ;; workaround for allegro interrupting with errno=0
+     (if (zerop errno) :eok
+	 (cffi:foreign-enum-keyword 'error-code errno))
+     #-allegro
+     (cffi:foreign-enum-keyword 'error-code errno)
+     errno)))
 
 (defun zsys-strerror ()
   (let ((errno (cffi:foreign-funcall "zmq_errno" :int)))

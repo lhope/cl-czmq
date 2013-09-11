@@ -89,8 +89,6 @@
 (cffi:defcfun ("zclock_sleep" zclock_sleep) :void
   (msecs :int))
 
-(cffi:defcfun ("zclock_time" zclock_time) :int64)
-
 (cffi:defcfun ("zclock_log" zclock_log) :void
   (format :string)
   &rest)

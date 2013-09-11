@@ -40,7 +40,16 @@
 ;; retrying zframe-recv
 (defun zframe-recv (socket &optional (retry *zsys-retry*))
   (loop for frame = (%zframe-recv socket)
-     when (or frame (not retry) (not (eql (zsys-errno) :eintr)))
+     when
+       #+allegro
+       (or frame
+	   (let ((errno (zsys-errno)))
+	     ;; allegro interrupts with :eok sometimes. Always
+	     ;; continue in this case.
+	     (unless (eql errno :eok)
+	       (or (not retry) (not (eql errno :eintr))))))
+       #-allegro
+       (or frame (not retry) (not (eql (zsys-errno) :eintr)))
      return frame))
 
 (defun zframe-recv-nowait (socket)

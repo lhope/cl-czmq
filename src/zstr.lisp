@@ -26,7 +26,16 @@
 ;; retrying zstr-recv
 (defun zstr-recv (socket &optional (retry *zsys-retry*))
   (loop for str = (%zstr-recv socket)
-     when (or str (not retry) (not (eql (zsys-errno) :eintr)))
+     when
+       #+allegro
+       (or str
+	   (let ((errno (zsys-errno)))
+	     ;; allegro interrupts with :eok sometimes. Always
+	     ;; continue in this case.
+	     (unless (eql errno :eok)
+	       (or (not retry) (not (eql errno :eintr))))))
+       #-allegro
+       (or str (not retry) (not (eql (zsys-errno) :eintr)))
      return str))
 
 (defun zstr-recv-nowait (socket)

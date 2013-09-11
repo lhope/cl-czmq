@@ -134,9 +134,9 @@
 		    ((zbeacon-pipe node1) :zmq-pollin)
 		    ((zbeacon-pipe node2) :zmq-pollin)
 		    ((zbeacon-pipe node3) :zmq-pollin))
-      (loop with stop-at = (+ (zclock_time) 1000)
-	 while (< (zclock_time) stop-at) do
-	   (let ((timeout (- stop-at (zclock_time))))
+      (loop with stop-at = (+ (zclock-time) 1000)
+	 while (< (zclock-time) stop-at) do
+	   (let ((timeout (- stop-at (zclock-time))))
 	     (when (< timeout 0)
 	       (setf timeout 0))
 	     ;; fudging the call to zmq_poll. We should be using zloop.

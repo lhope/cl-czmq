@@ -32,6 +32,9 @@
 
 %ignore "CZMQ_ASSERT_SANE_FUNCTION";
 
+/* This causes problems on platforms that do not support int64 (:long-long) */
+%ignore "zclock_time";
+
 %typemap(cout) int64_t ":int64";
 %typemap(cin)  size_t "size_t";
 %typemap(cout) size_t "size_t";

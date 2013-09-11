@@ -29,6 +29,18 @@ We suggest using [quicklisp](http://www.quicklisp.org). Install that,
 and then grab the cl-czmq source (via tarball or git) and put it in
 `~/quicklisp/local-projects/`. Symlinks work okay too.
 
+## Compatibility ##
+
+Tested:
+- zmq 3.2.3
+- czmq 1.4.1
+- sbcl 1.1.7+ on Linux and Mac OSX 10.8.2
+- Franz Allegro Common Lisp 8.1
+  - `zclock_time` doesn't work due to :long-long usage. This may be 32 bit only.  There's a replacement native implementation of `zclock-sleep`.
+  - Polls don't work correctly due to the threading architecture of Franz ACL. For example, czmq's `zclock_sleep` always returns immediately
+  - `zmq_poll` (and hence `zpollset_poll` returns immediately with `ZMQ_POLLERR` if you set a time greater than 0.
+  - recvs and polls - even in the foreground thread - are interrupted often.
+
 ## Documentation and Examples ##
 
 See the czmq(7) manpage. Also see czmq.zeromq.com.

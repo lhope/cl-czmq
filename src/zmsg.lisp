@@ -33,6 +33,16 @@
 ;; retrying zmsg-recv
 (defun zmsg-recv (socket &optional (retry *zsys-retry*))
   (loop for msg = (%zmsg-recv socket)
+     when
+       #+allegro
+       (or msg
+	   (let ((errno (zsys-errno)))
+	     ;; allegro interrupts with :eok sometimes. Always
+	     ;; continue in this case.
+	     (unless (eql errno :eok)
+	       (or (not retry) (not (eql errno :eintr))))))
+       #-allegro
+       (or msg (not retry) (not (eql (zsys-errno) :eintr)))
      when (or msg (not retry) (not (eql (zsys-errno) :eintr)))
      return msg))
 

@@ -32,15 +32,33 @@
 ;;  --------------------------------------------------------------------------
 ;;  Sleep for a number of milliseconds
 
+#-allegro
 (defun zclock-sleep (msecs)
   (zclock_sleep msecs))
+
+;; alternate zclock-sleep implementation for allegro.
+#+allegro
+(setf (sys::thread-control :clock-event-delta) 0)
+
+#+allegro
+(defun zclock-sleep (msecs)
+  (sleep (* 0.001 msecs)))
 
 ;;  --------------------------------------------------------------------------
 ;;  Return current system clock as milliseconds
 
+#-allegro
 (defun zclock-time ()
-  "Note - not same as (get-universal-time)."
-  (zclock_time))
+  (cffi:foreign-funcall "zclock_time" :int64))
+
+#+allegro
+(defconstant +milli-multiplier+
+  (/ 1000 internal-time-units-per-second))
+
+#+allegro
+(defun zclock-time ()
+  "Note - this is not a real time, it is for use just as comparison with itself."
+  (floor (* (get-internal-real-time) +milli-multiplier+)))
 
 ;;  --------------------------------------------------------------------------
 ;;  Print formatted string to stdout, prefixed by date/time and

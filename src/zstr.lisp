@@ -42,11 +42,15 @@
   (with-freed-string
     (cffi:foreign-funcall "zstr_recv_nowait" :pointer socket :pointer)))
 
+;; Uses zframe to get around the 255 buffer limitation of czmq's zstr_send.
 (defun zstr-send (socket fmt &rest args)
-  (as-rc (zstr_send socket "%s" :string (apply #'format nil fmt args))))
+  (let ((frame (zframe-new (apply #'format nil fmt args))))
+    (zframe-send frame socket)))
 
+;; Uses zframe to get around the 255 buffer limitation of czmq's zstr_send.
 (defun zstr-sendm (socket fmt &rest args)
-  (as-rc (zstr_sendm socket "%s" :string (apply #'format nil fmt args))))
+  (let ((frame (zframe-new (apply #'format nil fmt args))))
+    (zframe-send frame socket :zframe-more)))
 
 ;;  --------------------------------------------------------------------------
 ;;  Selftest
